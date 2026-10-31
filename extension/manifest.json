@@ -1,0 +1,42 @@
+{
+  "manifest_version": 3,
+  "name": "拾页 · 一键导入",
+  "short_name": "拾页",
+  "version": "0.1.0",
+  "description": "把当前网页交给本机拾页翻译，并自动打开阅读页。",
+  "minimum_chrome_version": "103",
+  "permissions": [
+    "activeTab",
+    "contextMenus"
+  ],
+  "host_permissions": [
+    "http://127.0.0.1:4317/*",
+    "http://localhost:4317/*"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_title": "用拾页阅读这一页",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "commands": {
+    "import-current-tab": {
+      "suggested_key": {
+        "default": "Alt+Shift+R",
+        "mac": "Alt+Shift+R"
+      },
+      "description": "用拾页阅读当前页面"
+    }
+  }
+}

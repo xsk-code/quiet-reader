@@ -1,0 +1,37 @@
+name: Feature request
+description: Propose a focused improvement or provider compatibility report.
+title: "[Feature] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What is hard or impossible today? Who is affected?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+      description: Describe the smallest change that would solve it.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options: [Reading UI, Translation, Image redraw, Providers, Install / deployment, Agent integration, Documentation, Other]
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I checked existing issues and the known limitations in the README.
+          required: true
+        - label: I am not requesting public hosting, multi-user auth or telemetry.
+          required: false

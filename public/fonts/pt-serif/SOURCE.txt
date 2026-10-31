@@ -1,0 +1,15 @@
+PT Serif by ParaType Ltd., copyright 2010.
+License: SIL Open Font License 1.1; the complete license is in OFL.txt.
+Reserved Font Names: PT Sans, PT Serif, ParaType.
+Upstream: https://github.com/google/fonts/tree/main/ofl/ptserif
+
+The WOFF2 files are the unmodified "latin" subsets served by Google Fonts,
+downloaded on 2026-10-31 from the CSS API
+https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700
+OFL.txt is copied verbatim from the upstream repository above.
+
+File                                 Source                                                                         SHA-256
+pt-serif-v19-latin-regular.woff2     https://fonts.gstatic.com/s/ptserif/v19/EJRVQgYoZZY2vCFuvAFWzr-_dSb_.woff2      202b8aa6108ec44ba8f3d717b0c9f7f94c7f4d76f01943104eaadaf6cf3da602
+pt-serif-v19-latin-italic.woff2      https://fonts.gstatic.com/s/ptserif/v19/EJRTQgYoZZY2vCFuvAFT_r21cgT9rcs.woff2   219a8e6238f7f0b4bbd73b68ee78d0211d44c7808510fa5b9da6a1621bf63e6d
+pt-serif-v19-latin-700.woff2         https://fonts.gstatic.com/s/ptserif/v19/EJRSQgYoZZY2vCFuvAnt66qSVyvVp8NA.woff2  57d3ae6c4b78cc2d5b568212e1fcd75e5a0be45e6249e55750ba77d22e22bc3b
+pt-serif-v19-latin-700italic.woff2   https://fonts.gstatic.com/s/ptserif/v19/EJRQQgYoZZY2vCFuvAFT9gaQZynfoOFC-I0.woff2  c4ccc041f7601de446b71e38de328ff979696476f9e10d20e5df8d511691ceae

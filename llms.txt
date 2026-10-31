@@ -1,0 +1,32 @@
+# Quiet Reader
+
+> Local-first article translator and reader. Import a URL or Markdown, translate
+> into a chosen language (default: browser language) with any OpenAI-compatible Chat Completions endpoint, and read with
+> optional local SVG figure redraw. No cloud account, no telemetry.
+
+## Start
+
+- Install: `npm ci && npm start` (Node.js 22+)
+- Preview without credentials: `npm run demo`
+- Headless install check: `npm run verify`
+- Health: `GET /api/health`; setup: `GET /api/setup`
+- Data stays in `READER_DATA_DIR` (default `./data`)
+
+## Docs
+
+- [README](README.md)
+- [Install and troubleshooting](docs/INSTALL.md)
+- [Chrome/Edge one-click import extension](docs/EXTENSION.md)
+- [Agent deployment](docs/AGENT_DEPLOY.md)
+- [Provider recipes](docs/PROVIDERS.md)
+- [Provider compatibility](docs/COMPATIBILITY.md)
+- [Architecture and API](docs/ARCHITECTURE.md)
+- [Security](SECURITY.md)
+- [Releasing](docs/RELEASING.md)
+
+## Constraints
+
+- Single-user local service; binds 127.0.0.1, no authentication.
+- Do not expose to a LAN or the internet.
+- API keys come from environment variables only.
+- Windows supports API-only mode; local `.cmd`/`.bat` agents are unsupported.

@@ -1,0 +1,66 @@
+name: Bug report
+description: Report a reproducible problem without secrets or private articles.
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not paste API keys, `.env` values, private articles or raw provider
+        error bodies. Redact paths and account details.
+  - type: input
+    id: version
+    attributes:
+      label: Version / commit
+      placeholder: 0.1.0 or a commit hash
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options: [macOS, Linux, Windows, Other]
+    validations:
+      required: true
+  - type: input
+    id: node
+    attributes:
+      label: Node.js and npm versions
+      placeholder: node 22.x, npm 10.x
+    validations:
+      required: true
+  - type: dropdown
+    id: provider
+    attributes:
+      label: Model path
+      options: [API, agy, Codex, Not configured, Other]
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: "1. npm ci\n2. npm start\n3. ..."
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected and actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: doctor
+    attributes:
+      label: Redacted `npm run doctor -- --json`
+      description: Remove paths, keys and provider details you do not want public.
+      render: json
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I removed credentials, private articles and personal paths.
+          required: true
+        - label: This is not a security vulnerability (those go through private reporting).
+          required: true

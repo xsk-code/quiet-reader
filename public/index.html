@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="拾页：粘贴链接或正文，自动翻译，安静阅读。">
+  <meta name="color-scheme" content="light dark">
+  <title>拾页</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%231f0909' d='M4 5h9q3 0 3 3v20q-3-4-12-3zm24 0h-9v20h9z'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/reading.css">
+  <script defer src="/vendor/marked.js"></script>
+  <script defer src="/vendor/purify.js"></script>
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <aside class="sidebar" aria-label="书架">
+    <div class="library-header"><a class="brand" href="/" aria-label="拾页首页"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 5h8c2 0 3 1 3 3v20c-2-3-6-4-11-3V5Zm22 0h-8v20h8V5Z" fill="currentColor"/></svg><span>拾页</span></a><div class="library-actions"><button id="search-toggle" class="icon-btn" aria-label="搜索文章" title="搜索文章">⌕</button><button id="library-close" class="icon-btn" aria-label="收起书架" title="收起书架">×</button></div></div>
+    <button class="new-article" id="new-article"><span class="new-article-plus" aria-hidden="true">＋</span><span class="new-article-label">导入文章</span><kbd>⌘ K</kbd></button>
+    <nav class="library-section library-nav" aria-label="文章分类">
+      <button class="nav-item active" data-filter="all" aria-current="true">所有文章 <span id="article-count">0</span></button>
+      <button class="nav-item" data-filter="starred" aria-current="false">收藏 <span id="star-count">0</span></button>
+    </nav>
+    <section class="library-section status-filter" aria-label="阅读状态">
+      <div class="status-options" role="group" aria-label="按阅读状态筛选">
+        <button class="status-option active" data-status-filter="all" aria-pressed="true">全部 <span data-status-count="all">0</span></button>
+        <button class="status-option" data-status-filter="unread" aria-pressed="false">未读 <span data-status-count="unread">0</span></button>
+        <button class="status-option" data-status-filter="reading" aria-pressed="false">阅读中 <span data-status-count="reading">0</span></button>
+        <button class="status-option" data-status-filter="finished" aria-pressed="false">已读完 <span data-status-count="finished">0</span></button>
+      </div>
+    </section>
+    <section class="library-section shelf-section" aria-label="文章列表">
+      <input id="library-search" type="search" placeholder="搜索" aria-label="搜索标题或正文" hidden>
+      <div id="article-list" class="article-list"></div>
+    </section>
+    <span class="library-edge" aria-hidden="true">书架</span>
+  </aside>
+
+  <main class="main">
+    <header class="topbar" aria-label="阅读工具">
+      <button id="sidebar-toggle" class="icon-btn quiet-cue" aria-label="展开或收起书架" aria-expanded="false" title="书架">☷</button>
+      <span id="breadcrumb-title" class="sr-only"></span>
+      <div class="mode-switch reveal-control" role="group" aria-label="阅读语言"><button data-mode="translated" class="active" aria-label="译文">译文</button><button data-mode="original" aria-label="原文">原文</button><button data-mode="parallel" aria-label="双语对照">对照</button></div>
+      <div class="toolbar">
+        <div id="reading-control" class="reading-control" hidden><span id="reading-progress"></span><label class="sr-only" for="reading-status">当前文章阅读状态</label><select id="reading-status" aria-label="当前文章阅读状态"><option value="unread">未读</option><option value="reading">阅读中</option><option value="finished">已读完</option></select></div>
+        <button id="import-toggle" class="icon-btn quiet-cue" aria-label="导入文章" aria-expanded="false" title="导入文章 · ⌘K">＋</button>
+        <button id="focus-toggle" class="icon-btn reveal-control" aria-label="全屏阅读" aria-pressed="false" title="全屏阅读">⛶</button>
+        <button id="settings-toggle" class="icon-btn reveal-control aa-icon" aria-label="阅读设置" aria-expanded="false" title="阅读设置">Aa</button>
+        <button id="model-setup-toggle" class="icon-btn reveal-control" aria-label="模型接入" title="模型接入">⚙</button>
+      </div>
+      <div id="article-meta" class="article-meta reveal-control"></div>
+    </header>
+
+    <section class="import-section" id="import-section" aria-label="导入文章" hidden>
+      <form id="import-form">
+        <textarea id="article-input" rows="4" required placeholder="粘贴链接、正文或 Markdown…" aria-label="文章链接或正文"></textarea>
+        <div class="import-options"><div><button id="paste-clipboard" class="paste-clipboard" type="button" title="把剪贴板里的链接或正文粘贴进来">粘贴</button><label class="file-label" tabindex="0" role="button" aria-label="打开 Markdown 文件" title="打开 Markdown 文件"><span aria-hidden="true">↥</span><span class="sr-only">打开 Markdown 文件</span><input id="markdown-file" type="file" accept=".md,.markdown,.txt,text/plain,text/markdown"></label><select id="provider" aria-label="正文接入" title="正文接入" hidden><option value="api">模型 API</option><option value="agy">本地 agy</option><option value="codex">本地 Codex</option></select><label class="target-language" title="译文语言">译为<select id="target-language" aria-label="译文语言"></select></label></div><button id="import-button" class="primary-button" type="submit" title="翻译并阅读 · ⌘Enter" disabled>开始阅读 <span aria-hidden="true">→</span></button></div>
+        <p class="connection-summary"><span id="connection-summary">正在检查模型接入…</span> <button type="button" id="configure-models">设置接入</button></p>
+      </form>
+    </section>
+    <div id="job-status" class="job-status" hidden role="status" aria-live="polite"><div class="job-status-row"><span id="job-message"></span><span id="job-actions" class="job-actions" hidden><a id="job-open-source" target="_blank" rel="noopener noreferrer">打开原文 ↗</a><button type="button" id="job-paste">粘贴正文</button></span><button id="dismiss-status" class="icon-btn" aria-label="收起任务状态" hidden>×</button></div><progress id="job-progress" value="0" max="100"></progress></div>
+
+    <section id="reading-settings" class="reading-settings" hidden aria-label="阅读设置">
+      <div><strong>纸张</strong><div class="theme-options"><button data-theme="newsprint" class="theme-swatch paper" aria-label="纸页主题">纸页</button><button data-theme="white" class="theme-swatch white" aria-label="浅色主题">素白</button><button data-theme="night" class="theme-swatch night" aria-label="夜间主题">夜读</button></div></div>
+      <div><label for="font-size">字号 <span id="font-size-value">16</span></label><input id="font-size" type="range" min="15" max="25" step="1" value="16"></div>
+      <div><label for="line-height">行距</label><input id="line-height" type="range" min="1.5" max="2.3" step="0.1" value="1.5"></div>
+      <div><label for="font-family">字体</label><select id="font-family"><option value="serif">纸页衬线体</option><option value="sans">清晰黑体</option></select></div>
+    </section>
+
+    <section class="reader-shell"><div class="reading-layout"><div class="article-column"><div id="article-notice" class="article-notice" hidden></div><article id="article" class="markdown-body" tabindex="-1"></article><footer class="reading-footer"><span id="reading-location"></span><button id="finish-reading">标记为已读完</button></footer></div></div></section>
+    <button id="outline-edge" class="outline-edge" type="button" aria-label="文章目录" aria-controls="outline-panel" title="文章目录">目录</button>
+    <aside id="outline-panel" class="outline-panel" aria-label="文章目录"><nav id="outline"></nav></aside>
+  </main>
+  <div id="toast" class="toast" role="status" hidden></div>
+  <button id="focus-exit" class="focus-exit" type="button" aria-label="退出全屏" title="退出全屏 · Esc" hidden>退出全屏 <kbd>Esc</kbd></button>
+  <dialog id="model-setup" class="model-setup" aria-labelledby="model-setup-title">
+    <div class="setup-heading"><div><h2 id="model-setup-title">接入你的模型</h2><p>选择模型服务，填写地址和模型。</p></div><button type="button" id="model-setup-close" class="icon-btn" aria-label="关闭模型接入">×</button></div>
+    <p id="setup-status" role="status"></p>
+    <form id="model-setup-form">
+      <fieldset><legend>正文 API</legend>
+        <label>服务地址<input id="setup-api-base-url" type="url" placeholder="https://your-model-service.example/v1" autocomplete="off"></label>
+        <div class="setup-grid"><div class="model-field"><label for="setup-text-model">正文模型</label><span class="model-row"><input id="setup-text-model" list="setup-model-options" placeholder="服务提供的模型名称" autocomplete="off"><button type="button" id="setup-fetch-models">获取模型</button></span><datalist id="setup-model-options"></datalist><span id="setup-models-status" class="setup-hint" role="status"></span></div><label>正文 API Key<input id="setup-api-key" type="password" autocomplete="new-password" placeholder="留空则不修改；仅保存在本机"></label></div>
+      </fieldset>
+      <details id="image-settings">
+        <summary>单独设置图片服务（可选，默认沿用正文模型）</summary>
+        <div class="setup-grid"><label>图片接入<select id="setup-image-mode"><option value="inherit">沿用正文 API</option><option value="separate">单独视觉 API</option><option value="none">保留原图</option></select></label></div>
+        <div id="setup-image-fields" hidden>
+          <label>图片服务地址<input id="setup-image-api-base-url" type="url" placeholder="留空则沿用正文服务地址" autocomplete="off"></label>
+          <div class="setup-grid"><label>视觉模型<input id="setup-image-model" placeholder="留空则沿用正文模型" autocomplete="off"></label><label>图片 API Key<input id="setup-image-api-key" type="password" autocomplete="new-password" placeholder="留空则不修改；仅保存在本机"></label></div>
+        </div>
+      </details>
+      <p id="setup-env-note" class="setup-hint" hidden>部分配置由环境变量管理。</p>
+      <div class="setup-actions"><button type="submit" class="primary-button">保存配置</button><button type="button" id="model-setup-done">稍后配置</button></div>
+    </form>
+    <div class="setup-probes"><button type="button" id="probe-text">验证正文连接</button><button type="button" id="probe-image">验证图片连接</button><p id="setup-probe-result" role="status" aria-live="polite"></p></div>
+  </dialog>
+</body>
+</html>
